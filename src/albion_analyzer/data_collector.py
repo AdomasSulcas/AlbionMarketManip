@@ -71,7 +71,6 @@ class AlbionDataCollector:
         
         df = pd.DataFrame(all_records).sort_values(["item", "city", "timestamp"])
         
-        # Add derived features
         df["log_price"] = np.log(df["price"])
         df["tier"] = df["item"].str.extract(r"T(\d)")[0].astype(int)
         df["slot"] = df["item"].str.split("_").str[2]
@@ -148,18 +147,15 @@ class AlbionDataCollector:
         
         df = df.copy()
         
-        # Rolling z-scores
         def rolling_z(series, window=7):
             roll = series.rolling(window, min_periods=3)
             return (series - roll.mean()) / roll.std()
         
         df["z"] = df.groupby(["item", "city"])["log_price"].transform(rolling_z)
         
-        # Peer deviations
         peer_median = df.groupby(["timestamp", "tier", "slot"])["log_price"].transform("median")
         df["peer_dev"] = df["log_price"] - peer_median
         
-        # Absolute values for ML features
         df["abs_z"] = df["z"].abs()
         df["abs_peer_dev"] = df["peer_dev"].abs()
         
@@ -170,17 +166,14 @@ class AlbionDataCollector:
         """
         Collect and preprocess data suitable for manipulation detection training
         """
-        # Fetch historical data
         df = self.fetch_historical_data(items, cities, days_back)
         
         if df.empty:
             print("No historical data retrieved")
             return df
         
-        # Add technical indicators
         df = self.add_technical_indicators(df)
         
-        # Add current market context (if available)
         try:
             current_prices = self.fetch_current_prices(items, cities, [1, 2, 3])
             if not current_prices.empty:

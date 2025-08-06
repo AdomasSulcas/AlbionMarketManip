@@ -35,7 +35,7 @@ setup(
     description="Machine learning system for detecting market manipulation in Albion Online",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    author="Market Analysis Team",
+    author="Adomas Šulcas",
     author_email="",
     url="",
     package_dir={"": "src"},

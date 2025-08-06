@@ -72,14 +72,12 @@ class MarketAnalyzer:
         print(f"Historical data: {days_back} days")
         print()
         
-        # 1. Data Collection
         print("1. Collecting market data...")
         df = self.data_collector.get_manipulation_training_data(items, cities, days_back)
         
         if df.empty:
             return {"error": "No data available for analysis"}
         
-        # 2. Feature Engineering with Gold Context
         print("2. Engineering features with gold economics...")
         features_df = self._prepare_features(df)
         features_df = self.gold_analyzer.add_gold_features(features_df)
@@ -87,7 +85,6 @@ class MarketAnalyzer:
             self.gold_analyzer.fetch_gold_prices()
         )
         
-        # 3. Manipulation Detection
         print("3. Running manipulation detection...")
         if use_ml:
             print("   Training ML models...")
@@ -101,15 +98,12 @@ class MarketAnalyzer:
             manipulation_detected = rule_results['manipulation_detected']
             confidence_scores = rule_results['confidence_score']
         
-        # 4. Quality Analysis (if multi-quality data available)
         print("4. Analyzing quality relationships...")
         quality_anomalies = self._analyze_quality_patterns(items, cities)
         
-        # 5. Price Forecasting
         print("5. Generating price forecasts...")
         forecasts = self._generate_forecasts(df)
         
-        # 6. Filter by Economic Context and Compile Results
         suspicious_df = features_df[manipulation_detected].copy()
         suspicious_df['confidence_score'] = confidence_scores[manipulation_detected]
         
