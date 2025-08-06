@@ -59,7 +59,7 @@ This system analyzes market data to detect artificial price inflation caused by 
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/AdomasSulcas/AlbionMarketManip.git
 cd albion-online-market
 
 # Install dependencies
@@ -106,7 +106,7 @@ python main.py --monitor --preset default
 # Monitor specific items with custom settings
 python main.py --monitor --items T4_2H_AXE T5_BAG --cities Caerleon Lymhurst --monitor-duration 60 --polling-interval 180
 
-# Run Phase 4 validation and performance testing
+# Run validation and performance testing
 python main.py --validate --preset default
 
 # Run performance benchmarking only
